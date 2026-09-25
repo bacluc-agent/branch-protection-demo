@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, labeled, unlabeled, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  required-ci:
+    name: required-ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fail when requested
+        if: github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'fail-ci')
+        run: exit 1
+      - name: Delay when requested
+        if: github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'slow-ci')
+        run: sleep 120
+      - name: Confirm success
+        if: always()
+        run: ":"
