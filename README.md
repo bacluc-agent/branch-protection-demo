@@ -16,7 +16,7 @@ Apply these values in [repository Settings](https://github.com/bacluc-agent/bran
 | `allow_rebase_merge` | `false` (Disabled) |
 | `allow_auto_merge` | `true` (Enabled) |
 
-Invite [`@BacLuc`](https://github.com/BacLuc) as a collaborator with **Write** (`push`) permission only. After acceptance, the collaborator API must report `role_name: write` and `permissions.push: true`; do not grant `admin`, `maintain`, or `triage`.
+Invite [`@BacLuc`](https://github.com/BacLuc) as a collaborator with **Write** (`push`) permission only. After acceptance, the collaborator API must report `role_name: write` and `permissions.push: true`; do not grant `admin`, `maintain`, or `triage`. The authoritative check is `role_name: write` with `permissions.admin: false` and `permissions.push: true` — the `permissions` object is cumulative, so a write collaborator always reports `triage: true` and `pull: true`; those flags are inherent to the role, not a grant of the `triage` role.
 
 ## Rulesets
 
@@ -44,7 +44,7 @@ Their permanent locations:
 | `pull_request.require_last_push_approval` | `true` |
 | `pull_request.require_code_owner_review` | `false` |
 | `pull_request.required_review_thread_resolution` | `false` |
-| `pull_request.require_extra_approval_for_unattributed_changes` | `true` (GitHub API default; enforced) — only adds an approval requirement for unattributed Copilot PRs, no effect otherwise |
+| `pull_request.require_extra_approval_for_unattributed_changes` | `true` (GitHub API default; enforced; the feature is in public preview and subject to change) — only adds an approval requirement for unattributed Copilot PRs, no effect otherwise |
 
 ### `main-ci`
 
@@ -72,7 +72,7 @@ See GitHub's [available rules for rulesets](https://docs.github.com/en/repositor
 
 ## Verification evidence
 
-**Bootstrap evidence:** the required-check workflow landed via [bootstrap PR #1](https://github.com/bacluc-agent/branch-protection-demo/pull/1), with `required-ci` success on `main` from the [pull_request run](https://github.com/bacluc-agent/branch-protection-demo/actions/runs/36150001948/job/108120567822#step:4) and the [workflow_dispatch run](https://github.com/bacluc-agent/branch-protection-demo/actions/runs/36152378661/job/108128570902#step:4).
+**Bootstrap evidence:** the required-check workflow landed via [bootstrap PR #1](https://github.com/bacluc-agent/branch-protection-demo/pull/1): `required-ci` succeeded on the PR head `bootstrap/required-ci` ([pull_request run 36150001948](https://github.com/bacluc-agent/branch-protection-demo/actions/runs/36150001948/job/108120567822#step:4)) before the merge, and on `main` after the merge via the [workflow_dispatch run 36152378661](https://github.com/bacluc-agent/branch-protection-demo/actions/runs/36152378661/job/108128570902#step:4).
 
 Replace every scenario placeholder only after the corresponding permanent evidence exists.
 
